@@ -78,7 +78,7 @@ async function loadPage(page) {
                 let levelCanBuy = false;
                 while (!levelCanBuy) {
                     await page.waitForSelector('.buybtn')
-                    console.log('详情页加载完成，开始选票----');
+                    console.log(chalk.green(`workerId: ${cluster.worker.id}, 详情页加载完成，开始选票`));
                     await clickByContent(page, config.perform);
                     levelCanBuy = await clickByContent(page, config.level);
                     console.log(chalk.green(`workerId: ${cluster.worker.id}, 第${count}次查询, 结果-------->${levelCanBuy ? '有票' : '无票'}`));

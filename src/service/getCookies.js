@@ -13,7 +13,7 @@ async function getCookies() {
             timeout: 10000,
             ignoreHTTPSErrors: true,
             devtools: true,
-            headless: false
+            headless: true
         })
 
         try {

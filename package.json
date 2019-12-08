@@ -1,10 +1,11 @@
 {
   "name": "damai",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "大麦抢票小工具",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node src/index.js --inspect",
+    "start": "node src/index.js"
   },
   "author": "liudiguang",
   "license": "ISC",

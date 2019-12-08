@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const cluster = require('cluster');
 
-const { getCookies } = require('../service');
+const { getCookies } = require('../service/getCookies');
 const config = require('../../config');
 let numCPUs = config.processes || require('os').cpus().length;
 
