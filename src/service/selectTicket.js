@@ -30,7 +30,7 @@ async function loadPage(page) {
                     return response.url().includes('https://buy.damai.cn/multi/trans/adjustConfirmOrder') && response.status() === 200
                 });
                 await page.waitForSelector('input[type=checkbox]');
-                console.log(chalk.green(`workerId: ${cluster.worker.id}, 订单页加载完成`));
+                console.log(chalk.blue(`workerId: ${cluster.worker.id}, ----------------------订单页加载完成，开始提交订单----------------------`));
 
                 await page.click('input[type=checkbox]', { delay: 310 })
                 //  等待服务端返回勾选成功
@@ -78,11 +78,16 @@ async function loadPage(page) {
                 let levelCanBuy = false;
                 while (!levelCanBuy) {
                     await page.waitForSelector('.buybtn')
-                    console.log(chalk.green(`workerId: ${cluster.worker.id}, 详情页加载完成，开始选票`));
+                    console.log(chalk.blue(`workerId: ${cluster.worker.id}, ----------------------详情页加载完成，开始选票----------------------`));
                     await clickByContent(page, config.perform);
                     levelCanBuy = await clickByContent(page, config.level);
-                    console.log(chalk.green(`workerId: ${cluster.worker.id}, 第${count}次查询, 结果-------->${levelCanBuy ? '有票' : '无票'}`));
-                    if (!levelCanBuy) await page.reload()
+                    console.log(chalk.green(`workerId: ${cluster.worker.id}, 第${count}次查询, 结果--------> ${levelCanBuy ? '有票' : '无票'}`));
+                    const btnText = await page.$eval('.buybtn', (buybtn) => {
+                        return buybtn.innerText
+                    });
+                    const isSubmit = '立即预订' === btnText
+                    console.log(chalk.green(`workerId: ${cluster.worker.id}, 当前状态${isSubmit ? '可以提交' : '不能提交'}，原因是-------->`, chalk.red(`${btnText}`)));
+                    if (!levelCanBuy || !isSubmit) await page.reload()
                     count++;
                 }
 
@@ -90,7 +95,7 @@ async function loadPage(page) {
                 await page.click(".buybtn", { clickCount: 1, delay: 400 }); // 点击提交订单
                 loadPage(page)
             } else {
-                console.log('其他莫名其妙的页, 或者是订单已提交 尽快付款~~');
+                console.log('其他莫名其妙的页面, 或者是订单已提交 尽快付款~~');
             }
         } catch (error) {
             console.log(chalk.red(`workerId: ${cluster.worker.id}, 出现了某些问题，重新加载 ${error}`));

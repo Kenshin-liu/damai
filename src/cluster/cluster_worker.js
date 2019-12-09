@@ -11,7 +11,7 @@ const preloadFile = fs.readFileSync(preloadPath, 'utf8');
 
 // 禁止直接启动
 if (cluster.isMaster) {
-    console.log('不允许直接启动子进程~~~');
+    console.log('不允许直接启动子进程');
     process.exit(0);
 }
 
