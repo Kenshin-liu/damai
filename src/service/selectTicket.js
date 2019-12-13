@@ -32,7 +32,12 @@ async function loadPage(page) {
                 await page.waitForSelector('input[type=checkbox]');
                 console.log(chalk.blue(`workerId: ${cluster.worker.id}, ----------------------订单页加载完成，开始提交订单----------------------`));
 
-                await page.click('input[type=checkbox]', { delay: 310 })
+                
+                for (let i = 1; i <= config.count; i++) {
+                    let selectorStr = `.ticket-buyer-select .buyer-list-item:nth-child(${i}) input`
+                    await page.click(selectorStr, { delay: 310 })
+                }
+
                 //  等待服务端返回勾选成功
                 await page.waitForResponse(response => {
                     return response.url().includes('https://buy.damai.cn/multi/trans/adjustConfirmOrder') && response.status() === 200
@@ -50,7 +55,7 @@ async function loadPage(page) {
                 console.log(chalk.green(`workerId: ${cluster.worker.id}, 开始提交订单`));
 
                 // await page.waitFor(1500);
-                await page.click('.submit-wrapper .next-btn-medium', { delay: 310 })
+                // await page.click('.submit-wrapper .next-btn-medium', { delay: 310 })
 
                 //  等待订单提交成功
                 let response = await page.waitForResponse(response => {
