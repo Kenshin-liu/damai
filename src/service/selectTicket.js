@@ -32,7 +32,6 @@ async function loadPage(page) {
                 await page.waitForSelector('input[type=checkbox]');
                 console.log(chalk.blue(`workerId: ${cluster.worker.id}, ----------------------订单页加载完成，开始提交订单----------------------`));
 
-                
                 for (let i = 1; i <= config.count; i++) {
                     let selectorStr = `.ticket-buyer-select .buyer-list-item:nth-child(${i}) input`
                     await page.click(selectorStr, { delay: 310 })
@@ -54,8 +53,8 @@ async function loadPage(page) {
                 console.log(chalk.green(`workerId: ${cluster.worker.id}, 已同意大麦网订票服务条款`));
                 console.log(chalk.green(`workerId: ${cluster.worker.id}, 开始提交订单`));
 
-                // await page.waitFor(1500);
-                // await page.click('.submit-wrapper .next-btn-medium', { delay: 310 })
+                await page.waitFor(1500);
+                await page.click('.submit-wrapper .next-btn-medium', { delay: 310 })
 
                 //  等待订单提交成功
                 let response = await page.waitForResponse(response => {
@@ -81,6 +80,7 @@ async function loadPage(page) {
                 // 详情页
                 await page.waitForSelector('.buybtn')
                 let levelCanBuy = false;
+                let isSubmit = false;
                 while (!levelCanBuy) {
                     await page.waitForSelector('.buybtn')
                     console.log(chalk.blue(`workerId: ${cluster.worker.id}, ----------------------详情页加载完成，开始选票----------------------`));
@@ -90,14 +90,16 @@ async function loadPage(page) {
                     const btnText = await page.$eval('.buybtn', (buybtn) => {
                         return buybtn.innerText
                     });
-                    const isSubmit = '立即预订' === btnText
+                    isSubmit = '立即购买' === btnText
                     console.log(chalk.green(`workerId: ${cluster.worker.id}, 当前状态${isSubmit ? '可以提交' : '不能提交'}，原因是-------->`, chalk.red(`${btnText}`)));
-                    if (!levelCanBuy || !isSubmit) await page.reload()
+                    if (!isSubmit) await page.reload()
                     count++;
                 }
 
-                await selectTicketCount(page);
-                await page.click(".buybtn", { clickCount: 1, delay: 400 }); // 点击提交订单
+                if (isSubmit) {
+                    await selectTicketCount(page);
+                    await page.click(".buybtn", { clickCount: 1, delay: 400 }); // 点击提交订单
+                }
                 loadPage(page)
             } else {
                 console.log('其他莫名其妙的页面, 或者是订单已提交 尽快付款~~');

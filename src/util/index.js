@@ -18,7 +18,7 @@ async function clickBySelector(page, selector) {
         try {
             const point = await page.evaluate(selector => {
                 let ele = document.querySelector(selector);
-                document.body.scroll(0, ele.offsetTop - 200);
+                ele && document.body.scroll(0, ele.offsetTop - 200);
                 let rect = ele && ele.getBoundingClientRect() || {};
                 let x = rect.left + rect.width / 2;
                 let y = rect.top + rect.height / 2
