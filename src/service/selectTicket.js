@@ -90,7 +90,7 @@ async function loadPage(page) {
                     const btnText = await page.$eval('.buybtn', (buybtn) => {
                         return buybtn.innerText
                     });
-                    isSubmit = '立即购买' === btnText
+                    isSubmit = ('立即购买' === btnText || '立即预订' === btnText)
                     console.log(chalk.green(`workerId: ${cluster.worker.id}, 当前状态${isSubmit ? '可以提交' : '不能提交'}，原因是-------->`, chalk.red(`${btnText}`)));
                     if (!isSubmit) await page.reload()
                     count++;

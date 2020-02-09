@@ -37,13 +37,14 @@ async function getCookies() {
             }, config);
 
             await loginIframe.click("button[type=submit]", { clickCount: 4, delay: 400 }) //模拟点击登录
-            await page.waitFor(800);
-
+            await page.waitFor(1800);
+            
             if (page.url() === loginUrl) {
                 console.log(chalk.red(`------------需要滑块验证------------`));
                 // 获取ifame的位置
                 const loginIframeRect = await page.evaluate(() => {
-                    let frame = document.getElementById('alibaba-login-box')
+                    let frame = document.getElementById('alibaba-login-box');
+                    console.log('frame: ', frame);
                     const { top, left, bottom, right } = frame.getBoundingClientRect();
                     return { top, left, bottom, right }
                 })
